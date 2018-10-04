@@ -22,6 +22,7 @@ import webbrowser
 
 from qgis.core import (
     Qgis,
+    QgsAction,
     QgsApplication,
     QgsAttributeEditorContainer,
     QgsAttributeEditorElement,
@@ -91,6 +92,7 @@ from ..config.table_mapping_config import (BFS_TABLE_BOUNDARY_FIELD,
                                            EXTFILE_TABLE,
                                            FORM_GROUPS,
                                            ID_FIELD,
+                                           LAYER_ACTIONS,
                                            LAYER_CONSTRAINTS,
                                            LAYER_VARIABLES,
                                            LENGTH_FIELD_BOUNDARY_TABLE,
@@ -426,6 +428,7 @@ class QGISUtils(QObject):
         self.set_automatic_fields(layer)
         self.set_layer_constraints(layer)
         self.set_form_groups(layer)
+        self.set_layer_actions(layer)
         if layer.isSpatial():
             self.symbology.set_layer_style_from_qml(layer)
             self.set_layer_visibility(layer, visible)
@@ -627,6 +630,21 @@ class QGISUtils(QObject):
                     new_general_tab.addChildElement(group_def['container'])
 
             irc.addChildElement(new_general_tab)
+
+    def set_layer_actions(self, layer):
+        if layer.name() in LAYER_ACTIONS:
+            for action in LAYER_ACTIONS[layer.name()]:
+                layer_action = QgsAction(
+                            action['type'],
+                            action['description'],
+                            action['command'],
+                            action['icon'],
+                            action['capture'],
+                            action['name'],
+                            action['scopes'])
+                layer.actions().addAction(layer_action)
+                if action['default_canvas']:
+                    layer.actions().setDefaultAction('Canvas', layer_action.id())
 
     def configure_automatic_field(self, layer, field, expression):
         index = layer.fields().indexFromName(field)

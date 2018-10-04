@@ -1,4 +1,4 @@
-from qgis.core import NULL
+from qgis.core import NULL, QgsAction
 
 """
 CADASTRE MAPPING
@@ -243,4 +243,19 @@ FORM_GROUPS = {
             'after_attr': 'predio_tipo'
         }
     }
+}
+
+LAYER_ACTIONS = {
+    PLOT_TABLE: [
+        {
+            'name': 'reporte',
+            'type': QgsAction.GenericPython,
+            'description': "Obtiene reporte para el terreno sobre el cual se da click",
+            'command': 'from qgis.PyQt import QtWidgets\n\nladm = qgis.utils.plugins[\'asistente_ladm_col\']\nlayer = ladm.qgis_utils.get_layer(ladm.get_db_connection(), \'terreno\', QgsWkbTypes.PolygonGeometry)\nlayer.selectByIds([[% $id %]])\nfeature = layer.getFeature([% $id %])\nQtWidgets.QMessageBox.information(None, "Feature id", "feature id is {}".format(feature["t_id"]))',
+            'icon': "/docs/borrar/pin.png",
+            'scopes': {'Canvas', 'Feature'},
+            'capture': False,
+            'default_canvas': True
+        }
+    ]
 }

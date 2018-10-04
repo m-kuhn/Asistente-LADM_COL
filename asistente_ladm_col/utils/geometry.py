@@ -413,7 +413,7 @@ class GeometryUtils(QObject):
 
         Ideally, we could pass the whole layer2 as parameter for
         addTopologicalPoints or, at least, pass one multi-geometry containing
-        all geometries from layer2. However, onthe one side, the
+        all geometries from layer2. However, on the one side, the
         addTopologicalPoints function doesn't support a layer as parameter and,
         on the other side, there is a bug in the function that doesn't let it
         work with multi-geometries. That's why we need to traverse the whole
