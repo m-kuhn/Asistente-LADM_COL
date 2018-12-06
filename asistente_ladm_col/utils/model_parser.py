@@ -29,7 +29,7 @@ from ..utils.project_generator_utils import ProjectGeneratorUtils
 
 class ModelParser:
     def __init__(self, db_connector):
-        self.debug = False
+        self.debug = True
         self.cadastre_model = None
         self.cadastre_model_legacy = None
         self.property_record_card_model = None
@@ -37,7 +37,8 @@ class ModelParser:
         self._db_connector = db_connector
         project_generator_utils = ProjectGeneratorUtils()
         self._pro_gen_db_connector = project_generator_utils.get_db_connection(self._db_connector)
-
+        if self.debug:
+            print("Initial_db_connector:", self._pro_gen_db_connector)
         if self._pro_gen_db_connector:
             model_records = self._get_models()
             if self.debug:

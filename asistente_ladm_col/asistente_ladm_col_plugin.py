@@ -507,7 +507,9 @@ class AsistenteLADMCOLPlugin(QObject):
         def decorated_function(inst, *args, **kwargs):
             # Check if current connection is valid and disable access if not
             db = inst.get_db_connection()
+            print("########### Tipo: ", type(db), db)
             res, msg = db.test_connection()
+            print("res: ", res, "\nmsg: ", msg)
             if res:
                 if not inst.qgis_utils._layers and not inst.qgis_utils._relations:
                     inst.qgis_utils.cache_layers_and_relations(db)
@@ -638,17 +640,17 @@ class AsistenteLADMCOLPlugin(QObject):
     def show_plugin_manager(self):
         self.iface.actionManagePlugins().trigger()
 
-    @_project_generator_required
-    @_db_connection_required
-    def load_layers_from_project_generator(self):
-        dlg = DialogLoadLayers(self.iface, self.get_db_connection(), self.qgis_utils)
-        dlg.exec_()
-
     def get_db_connection(self):
         return self.qgis_utils.get_db_connection()
 
     def show_dlg_controlled_measurement(self):
         dlg = ControlledMeasurementDialog(self.qgis_utils)
+        dlg.exec_()
+
+    @_project_generator_required
+    @_db_connection_required
+    def load_layers_from_project_generator(self):
+        dlg = DialogLoadLayers(self.iface, self.get_db_connection(), self.qgis_utils)
         dlg.exec_()
 
     @_project_generator_required
